@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"os"
 	"todolist/model"
 
 	"gorm.io/driver/postgres"
@@ -12,6 +13,10 @@ var Postgres *gorm.DB
 
 func PostgresConnect() {
 	dbURL := "postgres://postgres:postgres@localhost:5432/todos"
+	envDbUrl := os.Getenv("DB_URL")
+	if envDbUrl != "" {
+		dbURL = envDbUrl
+	}
 
 	// loc, _ := time.LoadLocation("Asia/Jakarta")
 	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{
