@@ -59,6 +59,9 @@ func (handler TodoHandler) Create(c *fiber.Ctx) error {
 	}
 
 	due_date, _ := time.Parse("2006-01-02 15:04:05", body.DueDate)
+	// timezone to Asia/Jakarta
+	loc, _ := time.LoadLocation("Asia/Jakarta")
+	due_date = due_date.In(loc)
 	todo := model.Todo{
 		Title:       body.Title,
 		Description: body.Description,
