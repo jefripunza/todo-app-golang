@@ -1,0 +1,302 @@
+basePath: /
+definitions:
+  dto.ErrorResponse:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  dto.TodoCreateBody:
+    properties:
+      description:
+        example: account description
+        maxLength: 100
+        minLength: 5
+        type: string
+      due_date:
+        example: "2025-07-02 15:04:05"
+        type: string
+      status:
+        enum:
+        - pending
+        - completed
+        example: pending
+        type: string
+      title:
+        example: account title
+        maxLength: 30
+        minLength: 5
+        type: string
+    required:
+    - description
+    - due_date
+    - status
+    - title
+    type: object
+  dto.TodoCreateResponse:
+    properties:
+      message:
+        type: string
+      task:
+        $ref: '#/definitions/model.Todo'
+    type: object
+  dto.TodoDeleteResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  dto.TodoGetAllPagination:
+    properties:
+      current_page:
+        type: integer
+      total_pages:
+        type: integer
+      total_tasks:
+        type: integer
+    type: object
+  dto.TodoGetAllResponse:
+    properties:
+      pagination:
+        $ref: '#/definitions/dto.TodoGetAllPagination'
+      tasks:
+        items:
+          $ref: '#/definitions/model.Todo'
+        type: array
+    type: object
+  dto.TodoUpdateBody:
+    properties:
+      description:
+        example: account description updated
+        maxLength: 100
+        minLength: 5
+        type: string
+      due_date:
+        example: "2025-07-05 22:19:00"
+        type: string
+      status:
+        enum:
+        - pending
+        - completed
+        example: completed
+        type: string
+      title:
+        example: account title updated
+        maxLength: 30
+        minLength: 5
+        type: string
+    type: object
+  dto.TodoUpdateResponse:
+    properties:
+      message:
+        type: string
+      task:
+        $ref: '#/definitions/model.Todo'
+    type: object
+  model.Todo:
+    properties:
+      description:
+        type: string
+      due_date:
+        type: string
+      id:
+        type: integer
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact:
+    email: hi@jefripunza.com
+    name: Jefri Herdi Triyanto
+    url: https://jefripunza.com
+  description: API for managing todos.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Todos API
+  version: "1.0"
+paths:
+  /tasks:
+    get:
+      consumes:
+      - application/json
+      description: get todos with pagination
+      parameters:
+      - description: '(optional): Filter tasks by status (pending/completed).'
+        in: query
+        name: status
+        type: string
+      - description: '(optional): Page number for pagination.'
+        in: query
+        name: page
+        type: string
+      - description: '(optional): Number of tasks per page.'
+        in: query
+        name: limit
+        type: string
+      - description: '(optional): Search term to filter tasks by title or description.'
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TodoGetAllResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: List Todos with pagination
+      tags:
+      - todos
+    post:
+      consumes:
+      - application/json
+      description: create todo
+      parameters:
+      - description: Todo Create Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TodoCreateBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TodoCreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Create Todo
+      tags:
+      - todos
+  /tasks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete todo
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TodoDeleteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Delete Todo
+      tags:
+      - todos
+    get:
+      consumes:
+      - application/json
+      description: get one todo
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Todo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get one Todo
+      tags:
+      - todos
+    put:
+      consumes:
+      - application/json
+      description: update todo
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Todo Update Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TodoUpdateBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TodoUpdateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Update Todo
+      tags:
+      - todos
+swagger: "2.0"
