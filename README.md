@@ -9,7 +9,7 @@ A robust RESTful API for managing todo tasks built with Go, Fiber, and GORM. Thi
 
 ## 🌐 Live Demo
 
-Explore the live demo: [https://todo-app-golang.jefripunza.com](https://todo-app-golang.jefripunza.com)
+Explore the live demo: [https://todo-app-golang.jefripunza.com/swagger](https://todo-app-golang.jefripunza.com/swagger)
 
 ## ✨ Features
 
